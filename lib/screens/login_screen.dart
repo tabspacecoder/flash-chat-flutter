@@ -10,10 +10,12 @@ class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
+
 String email;
 String password;
-bool showSpinner=false;
-final _auth=FirebaseAuth.instance;
+bool showSpinner = false;
+final _auth = FirebaseAuth.instance;
+
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
@@ -27,11 +29,13 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Hero(
-                tag: 'logo',
-                child: Container(
-                  height: 200.0,
-                  child: Image.asset('images/logo.png'),
+              Flexible(
+                child: Hero(
+                  tag: 'logo',
+                  child: Container(
+                    height: 200.0,
+                    child: Image.asset('images/logo.png'),
+                  ),
                 ),
               ),
               SizedBox(
@@ -39,11 +43,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               TextField(
                 textAlign: TextAlign.center,
-                keyboardType:TextInputType.emailAddress,
+                keyboardType: TextInputType.emailAddress,
                 onChanged: (value) {
-                  email=value;
+                  email = value;
                 },
-                decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
+                decoration:
+                    kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
               ),
               SizedBox(
                 height: 8.0,
@@ -52,9 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
                 obscureText: true,
                 onChanged: (value) {
-                  password=value;
+                  password = value;
                 },
-                decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password'),
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Enter your password'),
               ),
               SizedBox(
                 height: 24.0,
@@ -62,25 +68,22 @@ class _LoginScreenState extends State<LoginScreen> {
               roundedButton(
                   buttonColor: Colors.lightBlueAccent,
                   buttonText: 'Log In',
-                  onpressed: () async{
+                  onpressed: () async {
                     setState(() {
-                      showSpinner=true;
+                      showSpinner = true;
                     });
-                    try{
-                      final user=await _auth.signInWithEmailAndPassword(email: email, password: password);
-                      if(user!=null){
+                    try {
+                      final user = await _auth.signInWithEmailAndPassword(
+                          email: email, password: password);
+                      if (user != null) {
                         Navigator.pushNamed(context, ChatScreen.id);
                       }
                       setState(() {
-                        showSpinner=false;
+                        showSpinner = false;
                       });
-                    }
-                    catch(e){
+                    } catch (e) {
                       print(e);
                     }
-
-
-
                   }),
             ],
           ),

@@ -12,8 +12,8 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final _auth=FirebaseAuth.instance;
-  bool showSpinner=false;
+  final _auth = FirebaseAuth.instance;
+  bool showSpinner = false;
   String email;
   String password;
 
@@ -29,11 +29,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Hero(
-                tag: 'logo',
-                child: Container(
-                  height: 200.0,
-                  child: Image.asset('images/logo.png'),
+              Flexible(
+                child: Hero(
+                  tag: 'logo',
+                  child: Container(
+                    height: 200.0,
+                    child: Image.asset('images/logo.png'),
+                  ),
                 ),
               ),
               SizedBox(
@@ -41,12 +43,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               TextField(
                 textAlign: TextAlign.center,
-                keyboardType:TextInputType.emailAddress,
+                keyboardType: TextInputType.emailAddress,
                 onChanged: (value) {
-                  email=value;
+                  email = value;
                   //Do something with the user input.
                 },
-                decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
+                decoration:
+                    kTextFieldDecoration.copyWith(hintText: 'Enter your email'),
               ),
               SizedBox(
                 height: 8.0,
@@ -55,10 +58,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 textAlign: TextAlign.center,
                 obscureText: true,
                 onChanged: (value) {
-                  password=value;
+                  password = value;
                   //Do something with the user input.
                 },
-                decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password'),
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Enter your password'),
               ),
               SizedBox(
                 height: 24.0,
@@ -66,24 +70,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               roundedButton(
                   buttonColor: Colors.blueAccent,
                   buttonText: 'Register',
-                  onpressed: () async{
+                  onpressed: () async {
                     setState(() {
-                      showSpinner=true;
+                      showSpinner = true;
                     });
-                    try{
-                      final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-                      if(newUser!=null){
+                    try {
+                      final newUser =
+                          await _auth.createUserWithEmailAndPassword(
+                              email: email, password: password);
+                      if (newUser != null) {
                         Navigator.pushNamed(context, ChatScreen.id);
                       }
 
                       setState(() {
-                        showSpinner=false;
+                        showSpinner = false;
                       });
-                    }
-                    catch(e){
+                    } catch (e) {
                       print(e);
                     }
-
                   }),
             ],
           ),

@@ -11,7 +11,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _firestore = FirebaseFirestore.instance;
-  final _auth=FirebaseAuth.instance;
+  final _auth = FirebaseAuth.instance;
   User loggedInUSer;
   String messageText;
   @override
@@ -19,19 +19,33 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     getCurrentUser();
   }
-  void getCurrentUser()async{
-    try{
-      final user= await _auth.currentUser;
-      if(user !=null){
-        loggedInUSer=user;
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser;
+      if (user != null) {
+        loggedInUSer = user;
       }
-    }
-    catch(e){
+    } catch (e) {
       print(e);
     }
-
-
   }
+
+  // void getMessages() async {
+  //   var messages = await _firestore.collection('messages').get();
+  //   for (var message in messages.docs) {
+  //     print(message.data());
+  //   }
+  // }
+
+  void messagesStream() async {
+    await for (var snapshot in _firestore.collection('messages').snapshots()) {
+      for (var message in snapshot.docs) {
+        print(message.data());
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +55,9 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                _auth.signOut();
-                Navigator.pop(context);
+                // _auth.signOut();
+                // Navigator.pop(context);
+                messagesStream();
               }),
         ],
         title: Text('⚡️Chat'),
@@ -61,18 +76,17 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        messageText=value;
+                        messageText = value;
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   FlatButton(
                     onPressed: () {
-
-                    _firestore.collection('messages').add({
-                      'text':messageText,
-                      'sender':loggedInUSer.email,
-                    });
+                      _firestore.collection('messages').add({
+                        'text': messageText,
+                        'sender': loggedInUSer.email,
+                      });
                     },
                     child: Text(
                       'Send',
